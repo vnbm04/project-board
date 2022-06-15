@@ -2,6 +2,7 @@ package project.board.domain.user;
 
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import project.board.domain.base.BaseTimeEntity;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -16,7 +17,7 @@ import java.time.LocalDate;
         name = "user_seq_generator",
         sequenceName = "user_seq"
 )
-public class User {
+public class User extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq_generator")
     @Column(name = "user_id")
