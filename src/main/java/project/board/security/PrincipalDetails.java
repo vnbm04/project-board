@@ -6,6 +6,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import project.board.domain.user.User;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -41,8 +43,29 @@ public class PrincipalDetails implements UserDetails {
         return true;
     }
 
+    /**
+     * 마지막 로그인으로부터
+     * 1년을 초과한 경우 휴면 계정으로 전환
+     */
     @Override
     public boolean isAccountNonLocked() {
+
+        LocalDate lastLoginDate = user.getLoginDate();
+        LocalDate currentDate = LocalDate.now();
+
+        // 최초 로그인
+        if(lastLoginDate == null){
+            return true;
+        }
+
+        Long standardDate = 365L;
+        long period = ChronoUnit.DAYS.between(lastLoginDate, currentDate);
+
+        // 마지막 로그인으로부터 1년을 초과한 경우
+        if(period > standardDate){
+            return false;
+        }
+
         return true;
     }
 

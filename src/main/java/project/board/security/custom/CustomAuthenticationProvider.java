@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -40,7 +41,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         }
 
         // 휴면 계정 검증
-
+        if(!principalDetails.isAccountNonLocked()){
+            throw new LockedException("User account is locked");
+        }
 
         // 로그인 시간 갱신
         User user = userRepository.findById(principalDetails.getUser().getId()).orElse(null);
