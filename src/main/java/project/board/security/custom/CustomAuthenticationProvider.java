@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import project.board.domain.user.User;
 import project.board.domain.user.repository.UserRepository;
 import project.board.security.PrincipalDetails;
-import project.board.web.user.dto.UserLoginDto;
 
 @Component
 @RequiredArgsConstructor
@@ -25,7 +24,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -46,11 +44,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         }
 
         // 로그인 시간 갱신
-        User user = userRepository.findById(principalDetails.getUser().getId()).orElse(null);
+        User user = userRepository.findById(principalDetails.getUserLoginDto().getId()).orElse(null);
         user.updateLoginDate();
 
-        UserLoginDto userLoginDto = modelMapper.map(user, UserLoginDto.class);
-        return new UsernamePasswordAuthenticationToken(userLoginDto, null, principalDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
     }
 
     @Override

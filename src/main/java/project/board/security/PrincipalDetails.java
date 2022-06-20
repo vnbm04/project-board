@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import project.board.domain.user.User;
+import project.board.web.user.dto.UserLoginDto;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -15,27 +16,27 @@ import java.util.List;
 @Getter
 public class PrincipalDetails implements UserDetails {
 
-    private User user;
+    private UserLoginDto userLoginDto;
 
-    public PrincipalDetails(User user) {
-        this.user = user;
+    public PrincipalDetails(UserLoginDto userLoginDto) {
+        this.userLoginDto = userLoginDto;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> roles = new ArrayList<>();
-        roles.add(new SimpleGrantedAuthority(user.getRole()));
+        roles.add(new SimpleGrantedAuthority(userLoginDto.getRole()));
         return roles;
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return userLoginDto.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return userLoginDto.getEmail();
     }
 
     @Override
@@ -50,7 +51,7 @@ public class PrincipalDetails implements UserDetails {
     @Override
     public boolean isAccountNonLocked() {
 
-        LocalDate lastLoginDate = user.getLoginDate();
+        LocalDate lastLoginDate = userLoginDto.getLoginDate();
         LocalDate currentDate = LocalDate.now();
 
         // 최초 로그인
