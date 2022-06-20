@@ -27,14 +27,16 @@ public class User extends BaseTimeEntity {
     private String nickname;
     private String email;
     private String password;
-    private String role;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
     private LocalDate loginDate;
 
     /**
      * 회원가입 시, User 권한을 부여하는 메서드
      */
     public void addAuthority(){
-        this.role = "ROLE_USER";
+        this.role = Role.ROLE_USER;
     }
 
     /**

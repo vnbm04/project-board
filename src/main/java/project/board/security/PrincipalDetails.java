@@ -4,7 +4,6 @@ import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import project.board.domain.user.User;
 import project.board.web.user.dto.UserLoginDto;
 
 import java.time.LocalDate;
@@ -25,7 +24,7 @@ public class PrincipalDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> roles = new ArrayList<>();
-        roles.add(new SimpleGrantedAuthority(userLoginDto.getRole()));
+        roles.add(new SimpleGrantedAuthority(userLoginDto.getRole().name()));
         return roles;
     }
 

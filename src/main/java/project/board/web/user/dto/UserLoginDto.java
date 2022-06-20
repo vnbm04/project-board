@@ -2,6 +2,7 @@ package project.board.web.user.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import project.board.domain.user.Role;
 
 import java.time.LocalDate;
 
@@ -12,6 +13,6 @@ public class UserLoginDto {
     private String nickname;
     private String email;
     private String password;
-    private String role;
+    private Role role;
     private LocalDate LoginDate;
 }
