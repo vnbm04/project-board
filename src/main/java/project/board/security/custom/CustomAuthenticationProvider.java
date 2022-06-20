@@ -1,7 +1,6 @@
 package project.board.security.custom;
 
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
@@ -15,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import project.board.domain.user.User;
 import project.board.domain.user.repository.UserRepository;
 import project.board.security.PrincipalDetails;
+import project.board.web.user.exception.UserException;
+import project.board.web.user.exception.UserExceptionType;
 
 @Component
 @RequiredArgsConstructor
@@ -44,7 +45,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         }
 
         // 로그인 시간 갱신
-        User user = userRepository.findById(principalDetails.getUserLoginDto().getId()).orElse(null);
+        User user = userRepository.findById(principalDetails.getUserLoginDto().getId()).orElseThrow(() -> new UserException(UserExceptionType.NOT_FOUND_USER));
         user.updateLoginDate();
 
         return new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
