@@ -10,4 +10,9 @@ public class LoginController {
     public String loginForm(){
         return "user/login-form";
     }
+
+    @GetMapping("/login-main")
+    public String loginMain(){
+        return "user/login-main";
+    }
 }

@@ -1,10 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
+    <title>Bitnal</title>
 </head>
-<body>
-<h2>메인페이지입니다.</h2>
+<body class="is-preload">
+<div id="wrapper">
+    <div id="main">
+        <div class="inner">
+            <th:block th:replace="~{fragment/header :: header}"></th:block>
+            <!-- Banner -->
+            <section id="banner">
+                <div class="content">
+                    <header>
+                        <h1>Better for them<br/>
+                            Better for you</h1>
+                        <p>A free and fully responsive site template</p>
+                    </header>
+                    <p>Aenean ornare velit lacus, ac varius enim ullamcorper eu. Proin aliquam facilisis ante interdum congue.
+                        Integer mollis, nisl amet convallis, porttitor magna ullamcorper, amet egestas mauris. Ut magna finibus nisi
+                        nec lacinia. Nam maximus erat id euismod egestas. Pellentesque sapien ac quam. Lorem ipsum dolor sit
+                        nullam.</p>
+                    <ul class="actions">
+                        <li><a th:href="@{/posts}" class="button big">Communicate</a></li>
+                    </ul>
+                </div>
+                <span class="image object">
+                    <img src="/images/pic10.jpg" alt=""/>
+                </span>
+            </section>
+        </div>
+    </div>
+    <th:block th:replace="~{fragment/sidebar :: sidebar}"></th:block>
+</div>
+
+<th:block th:replace="~{fragment/js :: js}"></th:block>
+<div th:if="${#strings.equals(param.signUp, 'true')}">
+    <script>
+        alert("회원가입이 정상적으로 진행되었습니다.");
+    </script>
+</div>
 </body>
 </html>

@@ -30,7 +30,14 @@ public class TestDataInit {
                 .role(Role.ROLE_ADMIN)
                 .build();
 
+        User user3 = User.builder()
+                .email("vnbm04@gmail.com")
+                .password(passwordEncoder.encode("123!"))
+                .role(Role.ROLE_USER)
+                .build();
+
         userRepository.save(user);
         userRepository.save(user2);
+        userRepository.save(user3);
     }
 }

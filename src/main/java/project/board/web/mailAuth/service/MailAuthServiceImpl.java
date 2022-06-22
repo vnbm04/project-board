@@ -6,7 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.board.domain.mailAuth.MailAuth;
-import project.board.domain.mailAuth.repository.MailRepository;
+import project.board.domain.mailAuth.repository.MailAuthRepository;
 import project.board.web.mailAuth.dto.MailAuthDto;
 
 @Service
@@ -14,35 +14,40 @@ import project.board.web.mailAuth.dto.MailAuthDto;
 @RequiredArgsConstructor
 public class MailAuthServiceImpl implements MailAuthService {
 
-    private final MailRepository mailRepository;
+    private final MailAuthRepository mailAuthRepository;
     private final ModelMapper modelMapper;
 
     @Override
     public MailAuthDto createMailAuthCode(String email) {
 
-        MailAuth mailAuth = mailRepository.findByEmail(email).orElse(null);
+        MailAuth mailAuth = mailAuthRepository.findByEmail(email).orElse(null);
 
         if (mailAuth == null) {
-            return toMailAuthDto(email);
+            return toMailAuthDto(mailAuthRepository.save(createMailAuth(email)));
         }
 
         // 인증코드 만료 시
         if(mailAuth.isAuthCodeExpired()){
-            mailRepository.delete(mailAuth);
-            return toMailAuthDto(email);
+            mailAuthRepository.delete(mailAuth);
+            return toMailAuthDto(mailAuthRepository.save(createMailAuth(email)));
         }
 
         // 전송 횟수 초과
-        if(mailAuth.getCount() >= 3){
+        if(mailAuth.getCount() >= 2){
             return null;
         }
 
         mailAuth.increaseCount();
-        return modelMapper.map(mailAuth, MailAuthDto.class);
+        return toMailAuthDto(mailAuth);
     }
 
-    private MailAuthDto toMailAuthDto(String email) {
-        return modelMapper.map(createMailAuth(email), MailAuthDto.class);
+    @Override
+    public Boolean isValidEmailAndAuthCode(String email, String authCode) {
+        return mailAuthRepository.existsByEmailAndAuthCode(email, authCode);
+    }
+
+    private MailAuthDto toMailAuthDto(MailAuth mailAuth) {
+        return modelMapper.map(mailAuth, MailAuthDto.class);
     }
 
     private MailAuth createMailAuth(String email) {

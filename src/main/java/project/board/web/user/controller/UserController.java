@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import project.board.message.Message;
+import project.board.web.mail.service.MailSendService;
 import project.board.web.mailAuth.dto.MailAuthDto;
 import project.board.web.mailAuth.message.MailAuthMessage;
 import project.board.web.mailAuth.service.MailAuthService;
@@ -23,17 +24,18 @@ public class UserController {
 
     private final UserService userService;
     private final MailAuthService mailAuthService;
+    private final MailSendService mailSendService;
 
     /**
      * 회원가입
      */
-    @GetMapping("sign-up")
+    @GetMapping("/sign-up")
     public String signUpForm(Model model){
         model.addAttribute("user", new UserSignUpForm());
         return "user/sign-up-form";
     }
 
-    @PostMapping("sign-up")
+    @PostMapping("/sign-up")
     public String signUp(@Validated @ModelAttribute("user") UserSignUpForm form, BindingResult bindingResult){
 
         if(bindingResult.hasErrors()){
@@ -49,12 +51,16 @@ public class UserController {
         }
 
         // 인증코드 검증
-
+        if(!mailAuthService.isValidEmailAndAuthCode(form.getEmail(), form.getAuthCode())){
+            bindingResult.rejectValue("authCode", "InvalidEmailOrAuthCode");
+            log.info("errors={}", bindingResult);
+            return "user/sign-up-form";
+        }
 
         // 회원가입
         userService.join(form);
 
-        return "redirect:/login";
+        return "redirect:/loginForm";
     }
 
     /**
@@ -78,7 +84,7 @@ public class UserController {
         }
 
         // 인증코드 전송
-
+        mailSendService.sendAuthCode(mailAuthDto);
         return new ResponseEntity<>(new Message(MailAuthMessage.SEND_SUCCESS), HttpStatus.OK);
     }
 }

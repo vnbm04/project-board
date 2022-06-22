@@ -9,4 +9,5 @@ public interface MailAuthService {
      * 인증정보 검증
      */
     MailAuthDto createMailAuthCode(String email);
+    Boolean isValidEmailAndAuthCode(String email, String authCode);
 }
