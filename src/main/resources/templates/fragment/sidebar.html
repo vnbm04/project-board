@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>Sidebar</title>
+</head>
+<body>
+    <th:block th:fragment="sidebar">
+        <!-- Sidebar -->
+        <div id="sidebar">
+            <div class="inner">
+
+                <!-- Search -->
+                <section id="search" class="alt">
+                    <form method="post" action="#">
+                        <input type="text" name="query" id="query" placeholder="Search" />
+                    </form>
+                </section>
+
+                <!-- Menu -->
+                <nav id="menu">
+                    <header class="major">
+                        <h2>Menu</h2>
+                    </header>
+                    <ul>
+                        <li><a th:href="@{/}">Homepage</a></li>
+                        <li sec:authorize="hasAnyAuthority('ROLE_ADMIN')"><a th:href="@{/admin/main}">AdminPage</a></li>
+                        <li>
+                            <span class="opener">About us</span>
+                            <ul>
+                                <li><a href="#">Our story</a></li>
+                                <li><a href="#">Our service</a></li>
+                                <li><a href="#">Vision & Business</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <span class="opener">Service</span>
+                            <ul>
+                                <li><a th:href="@{/orders}">CAD</a></li>
+                            </ul>
+                        </li>
+                        <li sec:authorize="hasAnyAuthority('ROLE_USER', 'ROLE_DENTIST', 'ROLE_TECHNICIAN')">
+                            <span class="opener">My account</span>
+                            <ul>
+                                <li><a th:href="@{/users/my-account}">Account</a></li>
+                                <li><a th:href="@{/users/license}">License registration</a></li>
+                                <li><a th:href="@{/users/cases}">My cases</a></li>
+                                <li><a th:href="@{/logout}">Sign out</a></li>
+                            </ul>
+                        </li>
+                        <li sec:authorize="hasAnyAuthority('ROLE_DENTIST', 'ROLE_TECHNICIAN')"><a th:href="@{/orders}">Cases</a></li>
+                        <li sec:authorize="hasAnyAuthority('ROLE_DENTIST', 'ROLE_TECHNICIAN')"><a th:href="@{/company/connections/pending}">Connections</a></li>
+                        <li sec:authorize="hasAnyAuthority('ROLE_DENTIST', 'ROLE_TECHNICIAN')"><a href="#">Settings</a></li>
+                    </ul>
+                </nav>
+
+                <!-- Section -->
+                <section>
+                    <header class="major">
+                        <h2>Get in touch</h2>
+                    </header>
+                    <ul class="contact">
+                        <li class="icon solid fa-envelope"><a href="#">dhkim@bitnalcorp.com</a></li>
+                        <li class="icon solid fa-phone">(000) 000-0000</li>
+                        <li class="icon solid fa-home">1234 Somewhere Road #8254<br />
+                            Nashville, TN 00000-0000</li>
+                    </ul>
+                </section>
+
+                <!-- Footer -->
+                <footer id="footer">
+                    <p class="copyright">&copy; Untitled. All rights reserved. Demo Images: <a href="https://unsplash.com">Unsplash</a>. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+                </footer>
+
+            </div>
+        </div>
+    </th:block>
+
+</body>
+</html>

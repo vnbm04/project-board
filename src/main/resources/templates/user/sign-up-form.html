@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
+    <title>Bitnal</title>
+</head>
+<body class="is-preload">
+<div id="wrapper">
+    <div id="main">
+        <div class="inner">
+            <th:block th:replace="~{fragment/header :: header}"></th:block>
+            <!-- Banner -->
+            <section id="banner">
+                <!-- Section -->
+                <section>
+                    <header class="major">
+                        <h2>Create your Bitnal Account</h2>
+                    </header>
+
+                    <form method="post" th:action="@{/sign-up}" th:object="${user}">
+                        <div class="row gtr-uniform">
+                            <div class="col-12">
+                                <input type="text" name="username" th:field="*{username}" placeholder="Username" />
+                            </div>
+                            <div>
+                                <span class="field-error" th:errors="*{username}"></span>
+                            </div>
+                            <div class="col-12">
+                                <input type="text" name="nickname" th:field="*{nickname}" placeholder="Nickname" />
+                            </div>
+                            <div>
+                                <span class="field-error" th:errors="*{nickname}"></span>
+                            </div>
+                            <div class="col-12">
+                                <input type="text" name="email" th:field="*{email}" placeholder="Email" />
+                            </div>
+                            <div>
+                                <span class="field-error" th:errors="*{email}"></span>
+                            </div>
+                            <div class="col-12">
+                                <a class="button primary" id="email_check_button">Send verification code</a>
+                            </div>
+                            <div class="col-12">
+                                <input type="text" name="authCode" th:field="*{authCode}" placeholder="Verification code" />
+                            </div>
+                            <div>
+                                <span class="field-error" th:errors="*{authCode}"></span>
+                            </div>
+                            <div class="col-12">
+                                <input type="password" name="password" th:field="*{password}" placeholder="Password" />
+                            </div>
+                            <div>
+                                <span class="field-error" th:errors="*{password}"></span>
+                            </div>
+
+                            <!-- Break -->
+                            <div class="col-12">
+                                <ul class="actions">
+                                    <li><input type="submit" value="Create My Account" class="primary" /></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+            </section>
+
+        </div>
+    </div>
+    <th:block th:replace="~{fragment/sidebar :: sidebar}"></th:block>
+</div>
+
+<th:block th:replace="~{fragment/js :: js}"></th:block>
+<script>
+    /* 인증번호 이메일 전송 */
+    $("#email_check_button").click(function(){
+
+        var email = $("#email").val();
+
+        /* 이메일 형식 유효성 검사 */
+        if(!mailFormCheck(email)){
+            alert("Invalid email format");
+            return false;
+        }
+
+        $.ajax({
+            url: '/auth?email=' + email,
+            method: 'get',
+            success: function(data){
+                alert(data.message);
+            }
+        })
+
+    });
+
+    /* 입력 이메일 형식 유효성 검사 */
+    function mailFormCheck(email){
+        var form = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+        return form.test(email);
+    }
+
+</script>
+</body>
+</html>
