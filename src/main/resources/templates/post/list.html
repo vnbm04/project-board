@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
+    <title>Bitnal</title>
+</head>
+<body class="is-preload">
+<div id="wrapper">
+    <div id="main">
+        <div class="inner">
+            <th:block th:replace="~{fragment/header :: header}"></th:block>
+            <!-- Banner -->
+
+            <section class="alt">
+                <button type="button" th:onclick="|location.href='@{/posts/registration}'|">글쓰기</button>
+            </section>
+
+            <section>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Title</th>
+                            <th>Nickname</th>
+                            <th>Hit</th>
+                            <td>Updated On</td>
+                        </tr>
+                        </thead>
+                        <tbody th:each="post : ${posts}">
+                            <tr>
+                                <td th:text="${post.id}"></td>
+                                <td th:text="${post.title}"></td>
+                                <td th:text="${post.user.nickname}"></td>
+                                <td th:text="${post.hit}"></td>
+                                <td th:text="${post.lastModifiedDate}"></td>
+                            </tr>
+                        </tbody>
+
+                        <tfoot>
+
+                        </tfoot>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+    <th:block th:replace="~{fragment/sidebar :: sidebar}"></th:block>
+</div>
+
+<th:block th:replace="~{fragment/js :: js}"></th:block>
+</body>
+</html>

@@ -3,9 +3,12 @@ package project.board.domain.user;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import project.board.domain.base.BaseTimeEntity;
+import project.board.domain.post.Post;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -31,6 +34,10 @@ public class User extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
     private LocalDate loginDate;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Post> posts = new ArrayList<>();
 
     /**
      * 회원가입 시, User 권한을 부여하는 메서드

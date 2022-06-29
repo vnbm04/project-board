@@ -33,7 +33,7 @@ public class TestDataInit {
         User user3 = User.builder()
                 .email("vnbm04@gmail.com")
                 .username("김동현")
-                .nickname("김동현")
+                .nickname("김동현 닉네임")
                 .password(passwordEncoder.encode("123!"))
                 .role(Role.ROLE_USER)
                 .build();

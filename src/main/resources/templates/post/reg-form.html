@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
+    <title>Bitnal</title>
+</head>
+<body class="is-preload">
+<div id="wrapper">
+    <div id="main">
+        <div class="inner">
+            <th:block th:replace="~{fragment/header :: header}"></th:block>
+            <!-- Banner -->
+            <section id="banner">
+                <!-- Section -->
+                <section>
+                    <header class="major">
+                        <h2>글쓰기</h2>
+                    </header>
+
+                    <form method="post" th:action="@{/posts/registration}" th:object="${post}" enctype="multipart/form-data">
+                        <div class="row gtr-uniform">
+
+
+                            <div class="col-12">
+                                <input type="text" name="title" th:field="*{title}" placeholder="Title " />
+                            </div>
+                            <div>
+                                <span class="field-error" th:errors="*{title}"></span>
+                            </div>
+
+                            <div class="col-12">
+                               <textarea th:field="*{content}" placeholder="Enter your content " rows="4"></textarea>
+                            </div>
+                            <div>
+                                <span class="field-error" th:errors="*{content}"></span>
+                            </div>
+
+
+                            <div class="col-12" th:if="${#fields.hasGlobalErrors()}">
+                                <span class="field-error" th:each="error : ${#fields.globalErrors()}" th:text="${error}"></span>
+                            </div>
+
+                            <!-- Break -->
+                            <div class="col-12">
+                                <ul class="actions">
+                                    <li><input type="submit" value="Save" class="primary" /></li>
+                                    <li><button type="button" th:onclick="|location.href='@{/posts}'|">Cancel</button></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+            </section>
+
+        </div>
+    </div>
+    <th:block th:replace="~{fragment/sidebar :: sidebar}"></th:block>
+</div>
+
+<th:block th:replace="~{fragment/js :: js}"></th:block>
+
+</body>
+</html>
