@@ -7,7 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.board.domain.mailAuth.MailAuth;
 import project.board.domain.mailAuth.repository.MailAuthRepository;
+import project.board.exception.BaseException;
 import project.board.web.mailAuth.dto.MailAuthDto;
+import project.board.web.mailAuth.exception.MailAuthException;
+import project.board.web.mailAuth.exception.MailAuthExceptionType;
 
 @Service
 @Transactional
@@ -44,6 +47,12 @@ public class MailAuthServiceImpl implements MailAuthService {
     @Override
     public Boolean isValidEmailAndAuthCode(String email, String authCode) {
         return mailAuthRepository.existsByEmailAndAuthCode(email, authCode);
+    }
+
+    @Override
+    public MailAuthDto getMailAuthDto(String email) throws BaseException {
+        MailAuth mailAuth = mailAuthRepository.findByEmail(email).orElseThrow(() -> new MailAuthException(MailAuthExceptionType.NOT_FOUND_EMAIL));
+        return modelMapper.map(mailAuth, MailAuthDto.class);
     }
 
     private MailAuthDto toMailAuthDto(MailAuth mailAuth) {

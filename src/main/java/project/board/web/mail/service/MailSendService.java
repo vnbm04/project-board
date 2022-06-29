@@ -43,6 +43,40 @@ public class MailSendService {
                 "please contact us via dhkim@bitnalcorp.com</span>\n" +
                 "</div>";
 
+        sendMail(mail, subject, content, sender, mailAuthDto);
+
+    }
+
+    /**
+     * 비밀번호 변경 및 휴면 계정 전환
+     * URL 전송
+     */
+    public void sendChangePwdURL(MailAuthDto mailAuthDto){
+
+        MimeMessage mail = javaMailSender.createMimeMessage();
+
+        String sender = "bitnal@bitnalcorp.com";
+
+        String subject = "Bitnal Dental Studio Identity - Password reset requested";
+
+        String content =
+                "<div style=\"width: 500px\">\n" +
+                "<h2 style=\"color:blue\">Activate your Bitnal account</h2>\n" +
+                "<p>You have requested to reset the password for your Bitnal Identity account.</p>"
+                + "<a href='http://localhost:8080/account-recovery?email="
+                + mailAuthDto.getEmail() + "&authCode="+ mailAuthDto.getAuthCode() + "'>Click here to reset your password</a><br><br>\n" +
+                "<hr><br>\n" +
+                "<span style=\"font-size: 14px\"><strong>Bitnal Dental Studio</strong></span><br>\n" +
+                "<span>This email is automatically sent. Please do not reply to this email.</span><br>\n" +
+                "<span>If you have any questions about the bitnal service,<br>\n" +
+                "please contact us via dhkim@bitnalcorp.com</span>\n" +
+                "</div>";
+
+        sendMail(mail, subject, content, sender, mailAuthDto);
+
+    }
+
+    private void sendMail(MimeMessage mail, String subject, String content, String sender, MailAuthDto mailAuthDto) {
         try {
             mail.setSubject(subject, "utf-8");
             mail.setText(content, "utf-8", "html");
@@ -52,7 +86,6 @@ public class MailSendService {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
-
     }
 
 }

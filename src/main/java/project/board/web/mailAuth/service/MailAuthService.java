@@ -1,5 +1,6 @@
 package project.board.web.mailAuth.service;
 
+import project.board.exception.BaseException;
 import project.board.web.mailAuth.dto.MailAuthDto;
 
 public interface MailAuthService {
@@ -10,4 +11,5 @@ public interface MailAuthService {
      */
     MailAuthDto createMailAuthCode(String email);
     Boolean isValidEmailAndAuthCode(String email, String authCode);
+    MailAuthDto getMailAuthDto(String email) throws BaseException;
 }

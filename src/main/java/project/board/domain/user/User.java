@@ -40,7 +40,7 @@ public class User extends BaseTimeEntity {
     }
 
     /**
-     * 회원가입 시, 비밀번호를 암호화하는 메서드
+     * 비밀번호를 암호화하는 메서드
      */
     public void encodePassword(PasswordEncoder passwordEncoder){
         this.password = passwordEncoder.encode(password);
@@ -60,4 +60,9 @@ public class User extends BaseTimeEntity {
     public void updateLoginDate(){
         this.loginDate = LocalDate.now();
     }
+
+    public void updatePassword(String password){
+        this.password = password;
+    }
+
 }

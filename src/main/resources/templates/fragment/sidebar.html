@@ -40,18 +40,13 @@
                                 <li><a th:href="@{/orders}">CAD</a></li>
                             </ul>
                         </li>
-                        <li sec:authorize="hasAnyAuthority('ROLE_USER', 'ROLE_DENTIST', 'ROLE_TECHNICIAN')">
+                        <li sec:authorize="isAuthenticated()">
                             <span class="opener">My account</span>
                             <ul>
                                 <li><a th:href="@{/users/my-account}">Account</a></li>
-                                <li><a th:href="@{/users/license}">License registration</a></li>
-                                <li><a th:href="@{/users/cases}">My cases</a></li>
                                 <li><a th:href="@{/logout}">Sign out</a></li>
                             </ul>
                         </li>
-                        <li sec:authorize="hasAnyAuthority('ROLE_DENTIST', 'ROLE_TECHNICIAN')"><a th:href="@{/orders}">Cases</a></li>
-                        <li sec:authorize="hasAnyAuthority('ROLE_DENTIST', 'ROLE_TECHNICIAN')"><a th:href="@{/company/connections/pending}">Connections</a></li>
-                        <li sec:authorize="hasAnyAuthority('ROLE_DENTIST', 'ROLE_TECHNICIAN')"><a href="#">Settings</a></li>
                     </ul>
                 </nav>
 
