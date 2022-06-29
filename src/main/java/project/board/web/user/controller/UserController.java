@@ -4,21 +4,24 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import project.board.message.Message;
+import project.board.security.PrincipalDetails;
 import project.board.web.mail.service.MailSendService;
 import project.board.web.mailAuth.dto.MailAuthDto;
 import project.board.web.mailAuth.exception.MailAuthException;
 import project.board.web.mailAuth.exception.MailAuthExceptionType;
 import project.board.web.mailAuth.message.MailAuthMessage;
 import project.board.web.mailAuth.service.MailAuthService;
-import project.board.web.user.form.UserForgotPwdForm;
-import project.board.web.user.form.UserRecoveryPwdForm;
-import project.board.web.user.form.UserSignUpForm;
+import project.board.web.user.dto.UserInfoDto;
+import project.board.web.user.dto.UserLoginDto;
+import project.board.web.user.form.*;
+import project.board.web.user.message.UserMessage;
 import project.board.web.user.service.UserService;
 
 @Controller
@@ -158,4 +161,73 @@ public class UserController {
         return "redirect:/loginForm";
     }
 
+    /**
+     * 회원정보 수정
+     */
+    @GetMapping("/users/my-account")
+    public String myAccountForm(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model){
+        UserInfoDto userInfoDto = userService.getUserInfoDto(principalDetails.getUserLoginDto().getId());
+        model.addAttribute("user", userInfoDto);
+        return "user/my-account";
+    }
+
+    @PostMapping("/users/my-account")
+    public String editAccount(@Validated @ModelAttribute("user") UserEditForm form, BindingResult bindingResult){
+
+        if(bindingResult.hasErrors()){
+            log.info("errors={}", bindingResult);
+            return "user/my-account";
+        }
+
+        // 회원정보 수정
+        userService.editAccount(form);
+        return "redirect:/users/my-account";
+    }
+
+    /**
+     * 회원 비밀번호 변경
+     */
+    @GetMapping("/users/my-account/password")
+    public String changPwdForm(Model model){
+        model.addAttribute("user", new UserChangePwdForm());
+        return "user/change-password-form";
+    }
+
+    @PostMapping("/users/my-account/password")
+    public String changePwd(@Validated @ModelAttribute("user") UserChangePwdForm form, BindingResult bindingResult,
+                            @AuthenticationPrincipal PrincipalDetails principalDetails){
+
+        if(bindingResult.hasErrors()){
+            log.info("errors={}", bindingResult);
+            return "user/change-password-form";
+        }
+
+        // 현재 비밀번호 검증
+        if(userService.isValidPwd(principalDetails.getUserLoginDto().getId(), form.getCurrentPassword())){
+            bindingResult.rejectValue("currentPassword", "PasswordMismatch");
+            log.info("errors={}", bindingResult);
+            return "user/change-password-form";
+        }
+
+        // 재입력 비밀번호 검증
+        if(!form.getNewPassword().equals(form.getRePassword())){
+            bindingResult.rejectValue("rePassword", "PasswordMismatch");
+            log.info("errors={}", bindingResult);
+            return "user/change-password-form";
+        }
+
+        // 비밀번호 변경
+        userService.changePassword(principalDetails.getUserLoginDto().getId(), form.getNewPassword());
+        return "redirect:/users/my-account";
+    }
+
+    /**
+     * 회원정보 삭제
+     */
+    @DeleteMapping("/users")
+    @ResponseBody
+    public ResponseEntity<Message> deleteUser(@AuthenticationPrincipal PrincipalDetails principalDetails){
+        userService.deleteUser(principalDetails.getUserLoginDto().getId());
+        return new ResponseEntity<>(new Message(UserMessage.DELETE_USER_ACCOUNT), HttpStatus.OK);
+    }
 }

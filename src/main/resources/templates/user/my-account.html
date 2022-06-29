@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{fragment/css :: css}"></th:block>
+    <title>Bitnal</title>
+</head>
+<body class="is-preload">
+<div id="wrapper">
+    <div id="main">
+        <div class="inner">
+            <th:block th:replace="~{fragment/header :: header}"></th:block>
+            <!-- Banner -->
+            <section id="banner">
+                <div class="content">
+                    <header class="major">
+                        <h2>Edit your Bitnal Account</h2>
+                    </header>
+
+                    <form method="post" th:action="@{/users/my-account}" th:object="${user}">
+                        <div class="row gtr-uniform">
+
+                            <div class="col-12">
+                                <input type="text" name="email" th:field="*{email}" placeholder="Email" readonly/>
+                            </div>
+
+                            <div class="col-12">
+                                <input type="text" name="username" th:field="*{username}" placeholder="Username" />
+                            </div>
+                            <div>
+                                <span class="field-error" th:errors="*{username}"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <input type="text" name="nickname" th:field="*{nickname}" placeholder="Nickname" />
+                            </div>
+                            <div>
+                                <span class="field-error" th:errors="*{nickname}"></span>
+                            </div>
+
+
+                            <!-- Break -->
+                            <div class="col-12">
+                                <ul class="actions">
+                                    <li><input type="submit" value="Save changes" class="primary" /></li>
+                                    <li><a th:href="@{/users/my-account/password}" class="button primary">Change password</a></li>
+                                    <li><button type="button" class="button primary" id="delete_button">Delete account</button></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </div>
+    <th:block th:replace="~{fragment/sidebar :: sidebar}"></th:block>
+</div>
+
+<th:block th:replace="~{fragment/js :: js}"></th:block>
+
+<script>
+
+    $("#delete_button").click(function(){
+
+        if(confirm("Are you sure you want to leave?")){
+            $.ajax({
+                type: "delete",
+                url: "/users",
+                success: function(data){
+                    alert(data.message);
+                    location.href = '/logout';
+                }
+            })
+        }else {
+            return false;
+        }
+
+    });
+
+</script>
+
+</body>
+</html>
