@@ -11,7 +11,17 @@
             <th:block th:replace="~{fragment/header :: header}"></th:block>
             <!-- Banner -->
 
-            <section class="alt">
+            <section>
+
+                <form method="get" th:action="@{/posts/search}">
+                    <input type="text" name="keyword" th:value="${search.keyword}" placeholder="Search title, nickname " />
+                    <div style="margin-top: 5px;">
+                        <input type="date" name="startDate" th:value="${search.startDate}" th:max="${search.maxDate}">
+                        <input type="date" name="endDate" th:value="${search.endDate}" th:max="${search.maxDate}">
+                        <input type="submit" value="Search" class="primary small" style="float: right;"/>
+                    </div>
+                </form>
+
                 <button type="button" th:onclick="|location.href='@{/posts/registration}'|">글쓰기</button>
             </section>
 
@@ -41,6 +51,18 @@
 
                         </tfoot>
                     </table>
+
+                    <div>
+                        <span>
+                            <button th:if="${posts.first}" disabled th:onclick="|location.href='@{/posts(keyword=${param.keyword}, startDate=${param.startDate}, endDate=${param.endDate}, page=${posts.number-1})}'|">이전</button>
+                            <button th:unless="${posts.first}" th:onclick="|location.href='@{/posts(keyword=${param.keyword}, startDate=${param.startDate}, endDate=${param.endDate}, page=${posts.number-1})}'|">이전</button>
+                        </span>
+                        <span>
+                            <button th:if="${posts.last}" disabled th:onclick="|location.href='@{/posts(keyword=${param.keyword}, startDate=${param.startDate}, endDate=${param.endDate}, page=${posts.number+1})}'|">다음</button>
+                            <button th:unless="${posts.last}" th:onclick="|location.href='@{/posts(keyword=${param.keyword}, startDate=${param.startDate}, endDate=${param.endDate}, page=${posts.number+1})}'|">다음</button>
+                        </span>
+                    </div>
+
                 </div>
             </section>
         </div>
